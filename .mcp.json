@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "serena": {
+      "command": "/home/josh-laptop/.local/bin/uvx",
+      "args": [
+        "--from",
+        "git+https://github.com/oraios/serena",
+        "serena",
+        "start-mcp-server",
+        "--context",
+        "ide-assistant",
+        "--project",
+        "/mnt/SERENITYNAS/josue/workspace/Railway-Freight-Car-Routing-Delay-Prediction-System"
+      ]
+    }
+  }
+}
