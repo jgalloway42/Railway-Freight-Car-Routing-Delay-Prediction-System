@@ -1,10 +1,55 @@
 # Setup Guide
 
-Comprehensive guide for setting up your data science environment and getting the most out of this project template.
+Comprehensive guide for setting up your railway optimization environment. Get running in 3 steps or dive into detailed configuration options.
 
-## Overview
+---
 
-This template uses conda for environment management and provides an automated setup script that handles most of the configuration for you. This guide covers both the automated approach and manual setup options.
+## Quick Start (3 Steps)
+
+Get up and running in minutes:
+
+### Step 1: Get the Project
+```bash
+# Clone the repository
+git clone <your-repo-url>
+cd Railway-Freight-Car-Routing-Delay-Prediction-System
+```
+
+### Step 2: Run Environment Setup
+```bash
+# Run the automated setup script
+bash scripts/env-setup.sh
+```
+
+The script will prompt you for:
+- **Environment name** (recommended: `railopt`)
+- **Python version** (recommended: `3.10` or press Enter for latest)
+
+**What happens during setup:**
+✅ Creates conda environment with specified Python version
+✅ Creates data directories (`data/raw/`, `data/processed/`, etc.)
+✅ Installs all required packages from `requirements.txt`
+✅ Sets up Jupyter kernel for the new environment
+
+### Step 3: Activate & Verify
+```bash
+# Activate your new environment
+conda activate railopt  # or your chosen name
+
+# Verify GLPK solver is available
+glpsol --version
+
+# Test the optimization examples
+python src/optimization/assignment_example.py
+```
+
+**You're ready to optimize railway routes! 🚂**
+
+---
+
+## Detailed Setup Guide
+
+This template uses conda for environment management and provides an automated setup script that handles most configuration. This section covers prerequisites, manual setup, troubleshooting, and IDE configuration.
 
 ## Prerequisites
 

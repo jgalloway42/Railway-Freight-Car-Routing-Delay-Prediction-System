@@ -1,6 +1,11 @@
-# Data Science Project Template
+# Railway Freight Car Routing & Delay Prediction System
 
-A comprehensive, organized template for data science projects based on the cookiecutter-data-science structure. This template provides a standardized framework with powerful utilities, organized directories, and streamlined workflows.
+An integrated system for optimizing freight car routing and predicting delays in railway networks using mixed-integer linear programming (MILP) and machine learning. Built on a professional data science template framework for reproducible research and production-ready code.
+
+**Key Capabilities:**
+- **Optimization Engine**: Multi-commodity network flow routing using Pyomo and GLPK
+- **ML-based Prediction**: Delay prediction models trained on historical routing data
+- **Professional Framework**: Reproducible workflows with DataCatalog and structured project organization
 
 ## Key Features
 
@@ -37,39 +42,48 @@ A comprehensive, organized template for data science projects based on the cooki
 2. **Run setup script**: `bash scripts/env-setup.sh`
 3. **Start analyzing**: Open `notebooks/zz_template_notebook.ipynb`
 
-👉 **See [QUICKSTART.md](QUICKSTART.md) for detailed setup instructions**
+👉 **See [docs/setup.md](docs/setup.md) for detailed setup instructions**
 
 ## Project Structure
 
 ```
 ├── README.md          ← Project overview (you are here)
-├── QUICKSTART.md      ← Get started in minutes
 ├── requirements.txt   ← Python package dependencies
-├── scripts/          
+├── scripts/
 │   └── env-setup.sh   ← Environment setup script
-├── data/             
+├── data/
 │   ├── raw/           ← Original, immutable data
 │   ├── processed/     ← Final datasets for modeling
-│   ├── interim/       ← Intermediate transformed data
-│   └── external/      ← Third-party data sources
-├── notebooks/         
+│   └── interim/       ← Intermediate transformed data
+├── notebooks/
 │   └── zz_template_notebook.ipynb  ← Pre-configured analysis template
 ├── src/               ← Source code for this project
 │   ├── generic/       ← Core utilities and imports
+│   ├── optimization/  ← Railway routing optimization models (Pyomo/GLPK)
 │   ├── data_prep/     ← Data preparation modules
 │   ├── features/      ← Feature engineering
-│   ├── models/        ← Model training and evaluation
+│   ├── models/        ← ML model training and evaluation
 │   └── visualization/ ← Custom plotting functions
 ├── models/            ← Trained models and artifacts
 ├── reports/figures/   ← Generated visualizations
 └── docs/              ← Detailed documentation and guides
+    └── railway-optimization.md  ← MILP theory and implementation guide
 ```
 
 ## Documentation
 
-- **[QUICKSTART.md](QUICKSTART.md)** - Get started immediately
-- **[docs/](docs/)** - Comprehensive guides and documentation
-- **[docs/CLAUDE.md](docs/CLAUDE.md)** - Guide for Claude Code AI assistant
+### Getting Started
+- **[docs/setup.md](docs/setup.md)** - Complete setup guide with troubleshooting
+- **[docs/](docs/)** - Full documentation index
+
+### Railway Optimization
+- **[docs/railway-optimization.md](docs/railway-optimization.md)** - MILP fundamentals, network flow theory, and Pyomo implementation
+- **Working examples** in `src/optimization/`: assignment problems, multi-commodity flows, dataset generation
+
+### Development
+- **[docs/data-workflow.md](docs/data-workflow.md)** - DataCatalog system and data management
+- **[docs/notebook-guide.md](docs/notebook-guide.md)** - Jupyter notebook best practices
+- **[docs/CLAUDE.md](docs/CLAUDE.md)** - AI assistant guidance
 
 ## Based On
 
@@ -77,7 +91,8 @@ This template extends the proven [cookiecutter-data-science](https://github.com/
 
 ## Next Steps
 
-1. 📖 Read the [QUICKSTART.md](QUICKSTART.md) guide
-2. 🔧 Run the environment setup script
-3. 📊 Explore the template notebook
-4. 📚 Browse the [detailed documentation](docs/) for advanced usage
+1. 📖 Read the [setup guide](docs/setup.md) to get your environment configured
+2. 🎯 Study [railway optimization fundamentals](docs/railway-optimization.md) for MILP theory
+3. 🚂 Run the examples in `src/optimization/` to see routing in action
+4. 📊 Explore the template notebook for data analysis workflows
+5. 📚 Browse the [detailed documentation](docs/) for advanced usage

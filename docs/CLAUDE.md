@@ -1,168 +1,121 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code (claude.ai/code) when working with this railway optimization repository.
 
 ## Project Overview
 
-This is a comprehensive data science project template based on the cookiecutter-data-science structure. It provides a standardized framework with organized directories, powerful utilities, automated setup, and comprehensive documentation.
+Railway Freight Car Routing & Delay Prediction System - combines MILP optimization (Pyomo/GLPK) with machine learning for routing and delay prediction. Built on a professional data science template framework.
 
-## Project Structure
+**Key Components:**
+- **Optimization Engine** (`src/optimization/`): MILP-based routing using Pyomo
+- **ML Pipeline** (`src/models/`): Delay prediction models
+- **Data Management**: DataCatalog system for file discovery and loading
+- **Framework**: Cookiecutter-data-science structure with enhanced utilities
 
-### Core Architecture
-- **src/**: Source code organized by functionality (all directories have __init__.py for proper Python packages)
-  - **generic/**: Core utilities shared across the project
-    - `preamble.py`: Standard imports, configurations, and robust path management for Jupyter notebooks
-    - `helpers.py`: Comprehensive data science utility functions including DataCatalog system
-  - **data_prep/**: Data preparation and cleaning modules
-  - **features/**: Feature engineering modules
-  - **models/**: Model training and evaluation modules
-  - **visualization/**: Custom plotting and visualization functions
+## Quick Reference
 
-- **data/**: Data storage with cookiecutter-data-science structure (created by setup script)
-  - `raw/`: Original, immutable data
-  - `processed/`: Final datasets for modeling
-  - `interim/`: Intermediate transformed data
-  - `external/`: Third-party data sources
+### Project Structure
+```
+├── src/
+│   ├── optimization/     # Railway routing MILP models (Pyomo)
+│   ├── generic/          # DataCatalog, helpers, preamble
+│   ├── data_prep/        # Data preparation modules
+│   ├── features/         # Feature engineering
+│   ├── models/           # ML models (delay prediction)
+│   └── visualization/    # Custom plotting
+├── data/                 # raw/, processed/, interim/
+├── notebooks/            # Jupyter analysis notebooks
+├── docs/                 # Comprehensive documentation
+│   ├── railway-optimization.md  # MILP theory & implementation
+│   ├── setup.md          # Environment setup
+│   ├── data-workflow.md  # DataCatalog usage
+│   └── notebook-guide.md # Notebook best practices
+└── scripts/              # env-setup.sh
+```
 
-- **notebooks/**: Jupyter notebooks for analysis
-  - `zz_template_notebook.ipynb`: Template with pre-configured setup and explicit imports
+For detailed structure, see [docs/README.md](README.md).
 
-- **scripts/**: Setup and utility scripts
-  - `env-setup.sh`: Automated environment setup script
+### Key Files
+- **Optimization examples**: `src/optimization/{assignment_example, railway_routing_simple, dataset_preparation}.py`
+- **Theory guide**: `docs/railway-optimization.md` - MILP fundamentals, network flows, Pyomo
+- **DataCatalog**: `src/generic/helpers.py` - File discovery and loading system
+- **Preamble**: `src/generic/preamble.py` - Standard imports and path management
 
-- **docs/**: Comprehensive documentation
-  - `setup.md`: Detailed environment setup guide
-  - `data-workflow.md`: DataCatalog usage and data management patterns
-  - `notebook-guide.md`: Notebook development best practices
-  - `CLAUDE.md`: This file
+## Railway Optimization Specifics
 
-- **reports/figures/**: Generated visualizations and figures
-- **models/**: Trained models and model artifacts (now a proper Python package with __init__.py)
+### Optimization Models (`src/optimization/`)
+- **assignment_example.py**: Simple worker-task assignment (MILP basics)
+- **railway_routing_simple.py**: Multi-commodity flow on 4-node network
+- **dataset_preparation.py**: Generate synthetic railway datasets
 
-### Key Components
+### Theory & Implementation
+See `docs/railway-optimization.md` for:
+- MILP formulation and canonical forms
+- Network flow problems and total unimodularity
+- Multi-commodity flows for multiple freight types
+- Pyomo implementation patterns
+- Complete working examples with explanations
 
-#### DataCatalog System (`src/generic/helpers.py`)
-The project includes a sophisticated file discovery and data loading system:
-- `DataCatalog` class for managing data files across directories
-- Automatic file scanning and metadata collection
-- Smart file loading with format detection (CSV, Excel, JSON, Pickle, Parquet, HDF5)
-- File search and filtering capabilities
-
-#### Notebook Template (`notebooks/zz_template_notebook.ipynb`)
-Pre-configured notebook with:
-- Explicit imports (no import * for clarity)
-- Automatic DataCatalog initialization and file discovery
-- Clean, documented setup in first cell
-- Updated environment setup instructions
+### Solver Setup
+- **Solver**: GLPK (installed via `sudo apt-get install glpk-utils` or `conda install -c conda-forge glpk`)
+- **Verify**: `glpsol --version`
+- **Test**: `python src/optimization/assignment_example.py`
 
 ## Development Workflow
 
 ### Environment Setup
-1. Run the environment setup script:
-   ```bash
-   bash scripts/env-setup.sh
-   ```
-   Note: Script moved to scripts/ directory for better organization
-2. Follow prompts to create conda environment with specified Python version
-3. The script automatically:
-   - Creates data directories (raw/, processed/, interim/, external/)
-   - Installs dependencies from requirements.txt
-   - Sets up Jupyter kernel
-   - Updates requirements.txt with installed packages
+```bash
+# Automated setup
+bash scripts/env-setup.sh
+conda activate railopt  # or your env name
 
-### Documentation System
-The project includes comprehensive documentation:
-- **README.md**: Project overview and quick navigation
-- **QUICKSTART.md**: Get running in 3 steps
-- **docs/setup.md**: Detailed setup with troubleshooting
-- **docs/data-workflow.md**: Complete DataCatalog guide and data management patterns  
-- **docs/notebook-guide.md**: Development best practices and optimization techniques
+# Verify optimization stack
+glpsol --version
+python -c "import pyomo; print(pyomo.__version__)"
+```
 
-### Working with Data
-- Use the DataCatalog system for file discovery: `catalog = create_data_catalog('.')`
-- Access file paths programmatically: `catalog.get_path('filename')`
-- Load files directly: `df = catalog.load_file('filename')`
-- Search for files: `catalog.find_files('pattern')`
+### Working with Documentation
+- **Setup**: [docs/setup.md](setup.md) - Complete environment configuration
+- **Optimization**: [docs/railway-optimization.md](railway-optimization.md) - Theory & code
+- **Data**: [docs/data-workflow.md](data-workflow.md) - DataCatalog patterns
+- **Notebooks**: [docs/notebook-guide.md](notebook-guide.md) - Best practices
 
-### Notebook Development
-- Start with the template notebook for consistent setup
-- The first cell uses explicit imports grouped by purpose:
-  ```python
-  # Core data science libraries
-  from generic.preamble import np, pd, plt, sns
-  # Data management and paths
-  from generic.preamble import raw_data, processed_data, models_path
-  from generic.helpers import create_data_catalog
-  ```
-- DataCatalog is pre-initialized and displays available files summary
-- All src/ directories are proper Python packages with __init__.py files
+### DataCatalog Usage
+```python
+from generic.helpers import create_data_catalog
 
-## Dependencies
-
-Core packages (requirements.txt):
-- seaborn: Statistical visualization
-- plotly: Interactive plotting  
-- scikit-learn: Machine learning
-- statsmodels: Statistical modeling
-
-Standard data science stack is imported via preamble.py:
-- numpy, pandas, matplotlib, seaborn
-- joblib for model persistence  
-- warnings management and display configurations
-- Robust path management using pathlib and __file__
-
-## File Organization Conventions
-
-- Use descriptive filenames without spaces or special characters (Windows compatibility)
-- Store raw data in data/raw/ (never modify)
-- Place cleaned data in data/processed/
-- Use data/interim/ for intermediate processing steps
-- Save models in models/ directory (now a proper Python package)
-- Generate figures in reports/figures/
-- Keep setup scripts in scripts/ directory
-
-## Windows Compatibility Notes
-
-- All file paths use forward slashes or pathlib for cross-platform compatibility
-- Avoid Unicode characters in file names and code comments
-- Use UTF-8 encoding when reading/writing text files:
-  ```python
-  df.to_csv('file.csv', encoding='utf-8')
-  pd.read_csv('file.csv', encoding='utf-8')
-  ```
-- Path handling in preamble.py uses pathlib for robust Windows support
-
-## Utility Functions
-
-The helpers.py module provides:
-- **File Operations**: `walk_directory()`, `save_joblib()`, logging setup
-- **Data Manipulation**: `search_columns()`, `filter_list()`, `flatten_list()`
-- **Visualization**: `plot_df()`, `plotly_graph()` with caching and export options
-- **DataCatalog**: Comprehensive data file management system
-
-## Key Improvements Made
-
-This template has been enhanced beyond basic cookiecutter-data-science with:
-- **Automated setup**: Single script creates environment and directory structure
-- **Smart file management**: DataCatalog system for automatic file discovery and loading
-- **Clean notebook setup**: Explicit imports with pre-configured utilities
-- **Comprehensive documentation**: Multi-level guides from quickstart to advanced usage
-- **Proper package structure**: All directories have __init__.py files for clean imports
-- **Windows compatibility**: Robust path handling and encoding considerations
-- **Organized scripts**: Setup and utility scripts in dedicated scripts/ directory
+catalog = create_data_catalog('.')
+catalog.find_files('pattern')     # Search files
+df = catalog.load_file('name')    # Auto-format detection
+```
 
 ## Development Commands
 
-- **Environment setup**: `bash scripts/env-setup.sh`
-- **Activate environment**: `conda activate [ENV_NAME]`
-- **Start Jupyter**: `jupyter notebook` or `jupyter lab`
-- **Template notebook**: `notebooks/zz_template_notebook.ipynb`
+```bash
+# Environment
+conda activate railopt
+bash scripts/env-setup.sh  # Initial setup
+
+# Run optimization examples
+python src/optimization/assignment_example.py
+python src/optimization/railway_routing_simple.py
+python src/optimization/dataset_preparation.py
+
+# Jupyter
+jupyter notebook  # or jupyter lab
+```
+
+## Windows Compatibility
+
+- Use pathlib for cross-platform paths
+- UTF-8 encoding: `pd.read_csv('file.csv', encoding='utf-8')`
+- Avoid special characters in filenames
+- Git Bash recommended for setup script
 
 ## Notes
 
-- Project follows enhanced cookiecutter-data-science conventions
-- No package.json, Makefile, or formal build system - this is a Python research template
-- Environment management handled through conda and requirements.txt
-- Focus on reproducible data science workflows rather than software engineering deployment
-- All documentation avoids Unicode characters for Windows compatibility
-- Path handling uses pathlib for cross-platform robustness
+- Project follows cookiecutter-data-science conventions with railway-specific enhancements
+- Environment managed via conda + requirements.txt
+- Focus on reproducible research workflows
+- All src/ directories are proper Python packages (have `__init__.py`)
+- Optimization models use Pyomo with GLPK solver backend
