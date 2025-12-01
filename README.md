@@ -74,7 +74,6 @@ An integrated system for optimizing freight car routing and predicting delays in
 
 ### Getting Started
 - **[docs/setup.md](docs/setup.md)** - Complete setup guide with troubleshooting
-- **[docs/](docs/)** - Full documentation index
 
 ### Railway Optimization
 - **[docs/railway-optimization.md](docs/railway-optimization.md)** - MILP fundamentals, network flow theory, and Pyomo implementation
@@ -83,7 +82,9 @@ An integrated system for optimizing freight car routing and predicting delays in
 ### Development
 - **[docs/data-workflow.md](docs/data-workflow.md)** - DataCatalog system and data management
 - **[docs/notebook-guide.md](docs/notebook-guide.md)** - Jupyter notebook best practices
-- **[docs/CLAUDE.md](docs/CLAUDE.md)** - AI assistant guidance
+
+### AI Assistant
+- **[.claude/CLAUDE.md](.claude/CLAUDE.md)** - Guide for Claude Code and AI assistants
 
 ## Based On
 
