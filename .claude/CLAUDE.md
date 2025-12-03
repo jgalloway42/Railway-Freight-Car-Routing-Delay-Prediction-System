@@ -4,7 +4,7 @@ Guidance for Claude Code (claude.ai/code) when working with this railway optimiz
 
 ## Project Overview
 
-Railway Freight Car Routing & Delay Prediction System - combines MILP optimization (Pyomo/GLPK) with machine learning for routing and delay prediction. Built on a professional data science template framework.
+Railway Freight Car Routing & Delay Prediction System - combines MILP optimization (Pyomo/GLPK) with machine learning for routing and delay prediction. Built on a professional data science template framework. The goal is to learn OR and implement projects suitable for display to potential employers. The student has a background in chemical process engineering and applied mathematics at the graduate level. They have been working in continuous process optimiztion and needs to review/upgrade OR subject matter.
 
 **Key Components:**
 - **Optimization Engine** (`src/optimization/`): MILP-based routing using Pyomo
