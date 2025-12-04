@@ -4,15 +4,18 @@ Simplified Railway Routing - Multi-Commodity Flow
 Route multiple freight types through a simple 4-node network.
 
 Network topology:
-    A → B → D
+    A → B → E
     ↓   ↓
-    C → D
+    C → D -> E
 
 Commodities:
-- Coal: 50 units from A to D
-- Grain: 40 units from A to D
+- Coal: 50 units from A to E
+- Grain: 40 units from A to E
+- Sugar: 60 units from A to E
 
 Each arc has capacity and commodity-specific costs.
+
+Exercise: add a 3rd commodity, change network topology, add a capacity constraint
 """
 
 from pyomo.environ import *
@@ -23,23 +26,25 @@ def solve_railway_routing():
     model = ConcreteModel(name="SimplifiedRailway")
     
     # Network topology
-    nodes = ['A', 'B', 'C', 'D']
-    arcs = [('A','B'), ('A','C'), ('B','D'), ('C','D'), ('B','C')]
-    commodities = ['Coal', 'Grain']
+    nodes = ['A', 'B', 'C', 'D','E']
+    arcs = [('A','B'), ('A','C'), ('B','D'), ('B','E'), ('C','D'), ('D','E')]
+    commodities = ['Coal', 'Grain','Sugar']
     
-    # Arc data: (capacity, cost_coal, cost_grain)
+    # Arc data: (capacity, cost_coal, cost_grain, cost_sugar)
     arc_data = {
-        ('A','B'): (100, 5, 6),
-        ('A','C'): (80, 7, 5),
-        ('B','D'): (90, 4, 7),
-        ('C','D'): (70, 6, 4),
-        ('B','C'): (50, 3, 3)
+        ('A','B'): (100, 5, 6, 7),
+        ('A','C'): (60, 7, 5, 6),
+        ('B','D'): (100, 4, 7, 5),
+        ('B','E'): (150, 2, 2, 2),
+        ('C','D'): (60, 6, 4, 5),
+        ('D','E'): (150, 4, 4, 4)
     }
     
     # Demand: (origin, destination, amount)
     demand = {
-        'Coal': ('A', 'D', 50),
-        'Grain': ('A', 'D', 40)
+        'Coal': ('A', 'E', 50),
+        'Grain': ('A', 'E', 40),
+        'Sugar': ('A', 'E', 60)
     }
     
     # Sets
@@ -89,6 +94,11 @@ def solve_railway_routing():
     def capacity_constraint(model, i, j):
         return sum(model.flow[k,i,j] for k in model.Commodities) <= model.capacity[i,j]
     model.cap_con = Constraint(model.Arcs, rule=capacity_constraint)
+
+    # Commodity-specific arc constraint: limit sugar flow from B to E to 30 units
+    model.sugar_B_E_limit = Constraint(
+        expr=model.flow['Sugar', 'B', 'E'] <= 30
+    )
     
     # Display problem setup
     print("=" * 70)
@@ -96,19 +106,19 @@ def solve_railway_routing():
     print("=" * 70)
     
     print("\n📊 Network Topology:")
-    print("    A → B → D")
+    print("    A → B → E")
     print("    ↓   ↓")
-    print("    C → D")
+    print("    C → D -> E")
     
     print("\n🚂 Freight Demand:")
     for k in commodities:
         origin, destination, amount = demand[k]
         print(f"  {k:8}: {amount:3} units from {origin} to {destination}")
     
-    print("\n🛤️  Arc Data (Capacity, Cost_Coal, Cost_Grain):")
+    print("\n🛤️  Arc Data (Capacity, Cost_Coal, Cost_Grain, Cost_Sugar):")
     for arc in arcs:
-        cap, c_coal, c_grain = arc_data[arc]
-        print(f"  {arc[0]} → {arc[1]}: capacity={cap:3}, coal_cost=${c_coal}, grain_cost=${c_grain}")
+        cap, c_coal, c_grain, c_sugar = arc_data[arc]
+        print(f"  {arc[0]} → {arc[1]}: capacity={cap:3}, coal_cost=${c_coal}, grain_cost=${c_grain}, cost_sugar=${c_sugar}")
     
     # Solve
     print("\n⚙️  Solving optimization problem...")
