@@ -4,10 +4,25 @@ Railway Dataset Preparation Guide
 
 This guide covers obtaining and preparing datasets for the railway optimization project.
 """
+import sys
+from pathlib import Path
+
+# Add project root to path for imports
+current_file = Path(__file__).resolve()
+project_root = current_file.parent.parent.parent
+sys.path.insert(0, str(project_root))
+
+from src.generic.preamble import (
+    raw_data, processed_data, interim_data,
+    figures_path
+)
+
 
 # =====================================================================
 # OPTION 1: SYNTHETIC REALISTIC DATA (RECOMMENDED FOR LEARNING)
 # =====================================================================
+
+
 
 def generate_synthetic_railway_network():
     """
@@ -65,17 +80,20 @@ def generate_synthetic_railway_network():
                 'deadline': random.randint(12, 72)  # hours
             })
     
-    # Save to files
+    # Save to files using preamble paths
     import pickle
-    with open('data/raw/network_graph.pkl', 'wb') as f:
+    network_file = Path(raw_data) / 'network_graph.pkl'
+    demands_file = Path(raw_data) / 'demands.json'
+
+    with open(network_file, 'wb') as f:
         pickle.dump(G, f)
-    
-    with open('data/raw/demands.json', 'w') as f:
+
+    with open(demands_file, 'w') as f:
         json.dump(demands, f, indent=2)
-    
+
     print(f"✓ Generated network: {num_yards} yards, {G.number_of_edges()} connections")
     print(f"✓ Generated {len(demands)} freight demands")
-    print(f"✓ Saved to data/raw/")
+    print(f"✓ Saved to {raw_data}/")
     
     return G, demands
 
@@ -129,12 +147,14 @@ def fetch_osm_railway_data(bbox=None):
         G[u][v][k]['capacity'] = 100  # Default
         G[u][v][k]['base_cost'] = 10
     
-    # Save
+    # Save using preamble paths
     import pickle
-    with open('data/raw/osm_railway_network.pkl', 'wb') as f:
+    osm_file = Path(raw_data) / 'osm_railway_network.pkl'
+
+    with open(osm_file, 'wb') as f:
         pickle.dump(G, f)
-    
-    print(f"✓ Saved to data/raw/osm_railway_network.pkl")
+
+    print(f"✓ Saved to {osm_file}")
     
     return G
 
@@ -161,14 +181,16 @@ def fetch_bts_freight_data():
     - Tonnage estimates
     """
     import pandas as pd
-    
+
+    bts_file = Path(raw_data) / 'bts_freight.csv'
+
     try:
-        df = pd.read_csv('data/raw/bts_freight.csv')
+        df = pd.read_csv(bts_file)
         print(f"✓ Loaded BTS freight data: {len(df)} records")
         print(f"  Columns: {df.columns.tolist()}")
         return df
     except FileNotFoundError:
-        print("⚠️  BTS data not found at data/raw/bts_freight.csv")
+        print(f"⚠️  BTS data not found at {bts_file}")
         print("   Download from: https://www.bts.gov/faf")
         return None
 
@@ -248,8 +270,11 @@ def visualize_network(G):
     
     plt.title("Railway Network Topology")
     plt.tight_layout()
-    plt.savefig('outputs/network_visualization.png', dpi=150, bbox_inches='tight')
-    print("✓ Saved visualization to outputs/network_visualization.png")
+
+    # Save to figures path from preamble
+    viz_file = Path(figures_path) / 'network_visualization.png'
+    plt.savefig(viz_file, dpi=150, bbox_inches='tight')
+    print(f"✓ Saved visualization to {viz_file}")
     plt.close()
 
 
@@ -258,15 +283,15 @@ def visualize_network(G):
 # =====================================================================
 
 if __name__ == "__main__":
-    # Ensure directories exist
+    # Ensure directories exist using preamble paths
     import os
-    os.makedirs('data/raw', exist_ok=True)
-    os.makedirs('data/processed', exist_ok=True)
-    os.makedirs('outputs', exist_ok=True)
-    
+    os.makedirs(raw_data, exist_ok=True)
+    os.makedirs(processed_data, exist_ok=True)
+    os.makedirs(figures_path, exist_ok=True)
+
     # Generate dataset
     G, demands = prepare_day1_dataset()
-    
+
     # Optional: visualize
     try:
         import matplotlib
