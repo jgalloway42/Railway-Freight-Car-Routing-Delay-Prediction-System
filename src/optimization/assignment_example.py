@@ -3,6 +3,7 @@ Assignment Problem Example
 ===========================
 Assign workers to tasks to minimize total cost.
 Each worker gets exactly one task, each task gets exactly one worker.
+Add a 4th worker and constraint for exercise.
 """
 
 from pyomo.environ import *
@@ -13,13 +14,16 @@ def solve_assignment_problem():
     model = ConcreteModel(name="WorkerAssignment")
     
     # Data
-    workers = ['Alice', 'Bob', 'Carol']
+    workers = ['Alice', 'Bob', 'Carol','Jimmy']
     tasks = ['Task1', 'Task2', 'Task3']
     cost = {
-        ('Alice', 'Task1'): 10, ('Alice', 'Task2'): 15, ('Alice', 'Task3'): 12,
-        ('Bob', 'Task1'): 14, ('Bob', 'Task2'): 11, ('Bob', 'Task3'): 13,
-        ('Carol', 'Task1'): 12, ('Carol', 'Task2'): 13, ('Carol', 'Task3'): 10
+        ('Alice', 'Task1'): 15, ('Alice', 'Task2'): 35, ('Alice', 'Task3'): 1,
+        ('Bob', 'Task1'): 18, ('Bob', 'Task2'): 18, ('Bob', 'Task3'): 45,
+        ('Carol', 'Task1'): 17, ('Carol', 'Task2'): 23, ('Carol', 'Task3'): 38,
+        ('Jimmy', 'Task1'): 12, ('Jimmy', 'Task2'): 13, ('Jimmy', 'Task3'): 40
+
     }
+
     
     # Sets
     model.Workers = Set(initialize=workers)
@@ -39,13 +43,19 @@ def solve_assignment_problem():
     
     # Constraint: each worker assigned to exactly one task
     def worker_constraint(model, w):
-        return sum(model.x[w,t] for t in model.Tasks) == 1
+        return sum(model.x[w,t] for t in model.Tasks) <= 1
     model.worker_con = Constraint(model.Workers, rule=worker_constraint)
     
     # Constraint: each task assigned to exactly one worker
     def task_constraint(model, t):
         return sum(model.x[w,t] for w in model.Workers) == 1
     model.task_con = Constraint(model.Tasks, rule=task_constraint)
+
+        # Constraint: Alice cannot be assigned to Task3
+    def alice_constraint(model):
+        """Constraint for Alice cannont be assigned to Task3."""
+        return model.x['Alice', 'Task3'] == 0
+    model.alice_con = Constraint(rule=alice_constraint)
     
     # Solve
     print("=" * 60)
